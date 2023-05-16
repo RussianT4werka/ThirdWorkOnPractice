@@ -1,0 +1,31 @@
+﻿<Window x:Class="Ткани.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ткани"
+        mc:Ignorable="d"
+        Title="ООО «Ткани»" MinHeight="600" MinWidth="800" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Image Source="Foto/logo.png" Width="135"/>
+            <Label Content="Магазин по продаже тканей и фурнитуры в Кропоткине." Grid.Column="1" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <StackPanel Grid.Column="2" VerticalAlignment="Center" Visibility="{Binding UserVisibility}">
+                <Label Content="Авторизованный пользователь"/>
+                <Label Content="{Binding UserName}"/>
+                <Label Content="{Binding Role}"/>
+                <Button Content="Выйти" Command="{Binding Logout}" Style="{StaticResource AttentionButton}"/>
+            </StackPanel>
+        </Grid>
+        <Frame Grid.Row="1" NavigationUIVisibility="Hidden" Content="{Binding CurrentPage}" />
+    </Grid>
+</Window>
