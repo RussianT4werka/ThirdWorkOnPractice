@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using ООО__Товары_для_животных_.Interfaces;
 using ООО__Товары_для_животных_.Models;
 using ООО__Товары_для_животных_.Tools;
 using ООО__Товары_для_животных_.Views.Pages;
@@ -8,17 +9,17 @@ namespace ООО__Товары_для_животных_.ViewModels;
 
 public class MainViewModel : ViewModel
 {
-    public MainViewModel()
+    public MainViewModel(IDBListManufacturers iDBListManufacturers, IDBListProducts iDBListProducts, IDBSearchProduct iDBSearchProduct)
     {
         User = new User();
 
-        CurrentPage = new LogInPage(this);
+        CurrentPage = new LogInPage(this, iDBListManufacturers, iDBListProducts, iDBSearchProduct);
 
         LogoutCommand = new(() =>
         {
             User = new User();
             LoggedInVisibility = Visibility.Collapsed;
-            CurrentPage = new LogInPage(this);
+            CurrentPage = new LogInPage(this, iDBListManufacturers, iDBListProducts, iDBSearchProduct);
         });
     }
 

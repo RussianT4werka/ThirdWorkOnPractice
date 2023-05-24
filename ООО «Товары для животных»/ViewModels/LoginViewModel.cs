@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using ООО__Товары_для_животных_.Classes;
 using ООО__Товары_для_животных_.Database;
+using ООО__Товары_для_животных_.Interfaces;
 using ООО__Товары_для_животных_.Models;
 using ООО__Товары_для_животных_.Tools;
 using ООО__Товары_для_животных_.Views.Pages;
@@ -45,7 +46,7 @@ public class LoginViewModel : ViewModel
         }
     }
 
-    public LoginViewModel(MainViewModel mainViewModel, Canvas capchaCanvas, PasswordBox textPassword)
+    public LoginViewModel(MainViewModel mainViewModel, Canvas capchaCanvas, PasswordBox textPassword, IDBListManufacturers iDBListManufacturers, IDBListProducts iDBListProducts, IDBSearchProduct iDBSearchProduct)
     {
         this.mainViewModel = mainViewModel;
 
@@ -80,7 +81,7 @@ public class LoginViewModel : ViewModel
 
             if (user is not null)
             {
-                LoginAsUser(user);
+                LoginAsUser(user, iDBListManufacturers, iDBListProducts, iDBSearchProduct);
             }
             else
             {
@@ -101,7 +102,7 @@ public class LoginViewModel : ViewModel
                 }
             };
 
-            mainViewModel.CurrentPage = new ProductsListPage(mainViewModel);
+            mainViewModel.CurrentPage = new ProductsListPage(mainViewModel, iDBListManufacturers, iDBListProducts, iDBSearchProduct);
         });
     }
 
@@ -114,10 +115,10 @@ public class LoginViewModel : ViewModel
     string capchaValue;
     private bool canEnter = true;
 
-    private void LoginAsUser(User user)
+    private void LoginAsUser(User user, IDBListManufacturers iDBListManufacturers, IDBListProducts iDBListProducts, IDBSearchProduct iDBSearchProduct)
     {
         mainViewModel.User = user;
 
-        mainViewModel.CurrentPage = new ProductsListPage(mainViewModel);
+        mainViewModel.CurrentPage = new ProductsListPage(mainViewModel, iDBListManufacturers, iDBListProducts, iDBSearchProduct);
     }
 }

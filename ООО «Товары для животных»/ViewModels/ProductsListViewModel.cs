@@ -25,12 +25,14 @@ internal class ProductsListViewModel : ViewModel
     private ObservableCollection<Product> _products;
     private string _rowsCount = string.Empty;
     private Product _selectedProduct;
-    IDBSearchProduct iDBSearchProduct;
+    IDBSearchProduct _iDBSearchProduct;
+    IDBListProducts dBListProducts;
 
     public ProductsListViewModel(MainViewModel mainViewModel, IDBListManufacturers iDBListManufacturers, IDBListProducts iDBListProducts, IDBSearchProduct iDBSearchProduct)
     {
         this.mainViewModel = mainViewModel;
-
+        _iDBSearchProduct = iDBSearchProduct;
+        dBListProducts = iDBListProducts;
         try
         {
             Manufacturers = iDBListManufacturers.GetListManufacturers();
@@ -50,7 +52,7 @@ internal class ProductsListViewModel : ViewModel
 
         SelectedCostSortType = CostSortTypes[0];
 
-        SearchForProducts(iDBSearchProduct);
+        SearchForProducts();
 
         RemoveProductCommand = new(() =>
         {
@@ -79,7 +81,7 @@ internal class ProductsListViewModel : ViewModel
 
         AddProductCommand = new(() =>
         {
-            mainViewModel.CurrentPage = new EditProductPage(new Product(), mainViewModel);
+            mainViewModel.CurrentPage = new EditProductPage(new Product(), mainViewModel, iDBListManufacturers, iDBListProducts, iDBSearchProduct);
         });
         
         EditProductCommand = new(() =>
@@ -90,7 +92,7 @@ internal class ProductsListViewModel : ViewModel
                 return;
             }
 
-            mainViewModel.CurrentPage = new EditProductPage(SelectedProduct, mainViewModel);
+            mainViewModel.CurrentPage = new EditProductPage(SelectedProduct, mainViewModel, iDBListManufacturers, iDBListProducts, iDBSearchProduct);
         });
     }
 
@@ -138,7 +140,7 @@ internal class ProductsListViewModel : ViewModel
         {
             _searchText = value;
             OnPropertyChanged();
-            SearchForProducts(iDBSearchProduct);
+            SearchForProducts();
         }
     }
 
@@ -149,7 +151,7 @@ internal class ProductsListViewModel : ViewModel
         {
             _manufacturer = value;
             OnPropertyChanged();
-            SearchForProducts(iDBSearchProduct);
+            SearchForProducts();
         }
     }
 
@@ -175,17 +177,17 @@ internal class ProductsListViewModel : ViewModel
         {
             _selectedCostSortType = value;
             OnPropertyChanged();
-            SearchForProducts(iDBSearchProduct);
+            SearchForProducts();
         }
     }
 
-    private void SearchForProducts(IDBSearchProduct iDBSearchProduct)
+    private void SearchForProducts()
     {
         try
         {
-            var countAll = DB.Instance.Products.Count();
+            var countAll = dBListProducts.GetListProduct().Count();
 
-            var productsQuery = iDBSearchProduct.GetAllIncludeListProduct(SearchText);
+            var productsQuery = _iDBSearchProduct.GetAllIncludeListProduct(SearchText);
 
             if (SelectedManufacturer.Id != 0)
                 productsQuery = productsQuery.Where(s => s.ProductManufacturerId == SelectedManufacturer.Id).ToList();

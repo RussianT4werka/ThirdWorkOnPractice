@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using ООО__Товары_для_животных_.Database;
+using ООО__Товары_для_животных_.Interfaces;
 using ООО__Товары_для_животных_.Models;
 using ООО__Товары_для_животных_.Tools;
 using ООО__Товары_для_животных_.Views.Pages;
@@ -30,7 +31,7 @@ internal class EditProductViewModel : ViewModel
 
     private readonly Product original;
 
-    public EditProductViewModel(Product edit, MainViewModel mainViewModel)
+    public EditProductViewModel(Product edit, MainViewModel mainViewModel, IDBListManufacturers iDBListManufacturers, IDBListProducts iDBListProducts, IDBSearchProduct iDBSearchProduct)
     {
         original = edit;
 
@@ -95,7 +96,7 @@ internal class EditProductViewModel : ViewModel
 
         BackToList = new Command(() =>
         {
-            mainViewModel.CurrentPage = new ProductsListPage(mainViewModel);
+            mainViewModel.CurrentPage = new ProductsListPage(mainViewModel, iDBListManufacturers, iDBListProducts, iDBSearchProduct);
         });
 
         Save = new Command(() =>
